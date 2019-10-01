@@ -5,10 +5,22 @@ module.exports.loginGet = function(req, res) {
 }
 
 module.exports.loginPost = function(req, res) {
-    console.log(req.body);
-    res.render('login', {
-        kullaniciadi: req.body.username,
-        password: req.body.password
+    kullanici.findOne({ kullaniciadi: req.body.kullaniciadi }, function(err, user) {
+        console.log('User found ');
+        if (err) {
+            console.log('THIS IS ERROR RESPONSE')
+            res.json(err)
+        }
+        if (user && user.password === req.body.password) {
+            console.log('User and password is correct');
+            res.render('home', {
+                kullaniciadi: req.body.kullaniciadi,
+                password: req.body.password
+            });
+        } else {
+            console.log("Credentials wrong");
+            res.json({ data: "Login invalid" });
+        }
     });
 }
 
